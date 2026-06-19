@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int             @id @default(autoincrement())
+  nome      String
+  email     String          @unique
+  senha     String
+  perfil    String
+  criadoEm  DateTime        @default(now())
+
+  ordens    OrdemServico[]
+}
+
+model Cliente {
+  id            Int            @id @default(autoincrement())
+  nome          String
+  telefone      String
+  email         String
+  endereco      String
+
+  equipamentos  Equipamento[]
+}
+
+model Equipamento {
+  id            Int             @id @default(autoincrement())
+  nome          String
+  marca         String
+  modelo        String
+  numeroSerie   String
+
+  clienteId     Int
+  cliente       Cliente @relation(fields: [clienteId], references: [id])
+
+  ordens        OrdemServico[]
+}
+
+model OrdemServico {
+  id             Int             @id @default(autoincrement())
+  descricao      String
+  status         String          @default("ABERTA")
+  dataAbertura   DateTime        @default(now())
+
+  usuarioId      Int
+  usuario        Usuario @relation(fields: [usuarioId], references: [id])
+
+  equipamentoId  Int
+  equipamento    Equipamento @relation(fields: [equipamentoId], references: [id])
+
+  etapas         EtapaServico[]
+}
+
+model EtapaServico {
+  id              Int           @id @default(autoincrement())
+  descricao       String
+  concluida       Boolean       @default(false)
+
+  ordemServicoId  Int
+  ordemServico    OrdemServico @relation(fields: [ordemServicoId], references: [id])
+}
