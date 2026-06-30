@@ -9,3 +9,10 @@ GET http://localhost:3000/clientes/1
 ###
 
 POST http://localhost:3000/clientes
+
+{
+  "nome": "Nathan Campos",
+  "telefone": "(43) 99999-9999",
+  "email": "nathan@email.com",
+  "endereco": "Rua das Flores, 123"
+}
